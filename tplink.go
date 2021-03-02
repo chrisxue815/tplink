@@ -363,10 +363,13 @@ func exec(ip string, cmd string, timeout time.Duration) (string, error) {
 		return "", err
 	}
 	defer conn.Close()
+	conn.SetDeadline(time.Now().Add(timeout))
+
 	_, err = conn.Write(data)
 	if err != nil {
 		return "", err
 	}
+
 	rData := make([]byte, 1500)
 	rLen, err := bufio.NewReader(conn).Read(rData)
 	if err != nil {
